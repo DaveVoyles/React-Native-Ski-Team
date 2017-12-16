@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import {
   Button,
   Dimensions,
+  Image,
   Picker,
   StyleSheet,
   Text,
   View,
-  Image,
 } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
