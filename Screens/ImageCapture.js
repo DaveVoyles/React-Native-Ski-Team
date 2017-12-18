@@ -14,8 +14,7 @@ class ImageCapture extends Component {
   }
 
   takePicture() {
-    const options = {}
-    this.camera.capture({ metadata: options })
+    this.camera.capture()
       .then((data) => {
         console.log('image captured')
         console.log('data: ', data)
@@ -25,7 +24,6 @@ class ImageCapture extends Component {
   }
 
   render() {
-    const { goBack } = this.props.navigation
     return (
       <View style={styles.container}>
         <Camera
