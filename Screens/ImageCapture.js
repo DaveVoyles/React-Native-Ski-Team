@@ -1,23 +1,20 @@
 import React, { Component } from 'react'
 import {
+  Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import Camera from 'react-native-camera'
 
 class ImageCapture extends Component {
-  state = {
-    images: []
-  }
-
   static navigationOptions = {
     title: 'Camera'
   }
 
   takePicture() {
-    const options = {}
-    this.camera.capture({ metadata: options })
+    this.camera.capture()
       .then((data) => {
         console.log('image captured')
         console.log('data: ', data)
@@ -27,7 +24,6 @@ class ImageCapture extends Component {
   }
 
   render() {
-    const { goBack } = this.props.navigation
     return (
       <View style={styles.container}>
         <Camera
@@ -36,11 +32,17 @@ class ImageCapture extends Component {
           }}
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}>
-          <Text style={styles.capture} onPress={
+          <TouchableOpacity
+            style={styles.capture}
+            onPress={this.takePicture.bind(this)}
+            >
+            <Image source={require('../assets/ic_photo_camera_36pt.png')} />
+          </TouchableOpacity>
+          {/* <Text style={styles.capture} onPress={
             this.takePicture.bind(this)}
             >
             Capture
-          </Text>
+          </Text> */}
         </Camera>
       </View>
     )
@@ -61,7 +63,6 @@ const styles = StyleSheet.create({
     flex: 0,
     backgroundColor: '#fff',
     borderRadius: 5,
-    color: '#000',
     padding: 10,
     margin: 40
   }

@@ -50,7 +50,7 @@ class NewRace extends Component {
           <TextInput
             style={styles.input}
             value={this.state.codex}
-            placeholder={'N/a'}
+            placeholder={'Enter a codex'}
             onChangeText={(text) => this.setState({codex: text})}
           />
         </View>
@@ -74,7 +74,7 @@ class NewRace extends Component {
           <TextInput
             style={styles.input}
             value={this.state.temperature}
-            placeholder={'N/a'}
+            placeholder={'Enter a temperature'}
             onChangeText={(text) => this.setState({temperature: text})}
           />
         </View>
@@ -99,7 +99,7 @@ class NewRace extends Component {
           <TextInput
             style={styles.input}
             value={this.state.course}
-            placeholder={'N/a'}
+            placeholder={'Enter a course name'}
             onChangeText={(text) => this.setState({course: text})}
           />
         </View>
