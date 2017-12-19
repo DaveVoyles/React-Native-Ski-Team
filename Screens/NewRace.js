@@ -2,13 +2,11 @@ import React, { Component } from 'react'
 import {
   Alert,
   Button,
-  Picker,
   StyleSheet,
   Text,
   TextInput,
   View
 } from 'react-native'
-import ModalDropdown from 'react-native-modal-dropdown'
 import { Dropdown } from 'react-native-material-dropdown'
 
 class NewRace extends Component {
