@@ -73,8 +73,7 @@ class LineupForm extends Component {
   }
 
   renderNRows(n) {
-    if (this.state.position === 'Start Gate' ||
-        this.state.position === 'Finish') {
+    if (this.state.position === 'Start Gate') {
       return (
         [...Array(n).keys()].map((n) => {
           return (
@@ -116,7 +115,8 @@ class LineupForm extends Component {
           )
         })
       )
-    } else if (this.state.position === 'Hole') {
+    } else if (this.state.position === 'Hole' ||
+               this.state.position === 'Finish') {
       return (
         [...Array(n).keys()].map((n) => {
           return (
