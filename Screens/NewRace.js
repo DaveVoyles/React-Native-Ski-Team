@@ -13,13 +13,13 @@ class NewRace extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      codex: '',
-      gender: '',
-      temperature: '',
-      precipitation: '',
-      course: '',
+      codex: 'TestCodex',
+      gender: 'TestGender',
+      temperature: 'TestTemp',
+      precipitation: 'TestPrecip',
+      course: 'TestCourse',
       racers: 6,
-      position: '',
+      position: 'TestPos',
     }
   }
 
