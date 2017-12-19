@@ -20,7 +20,7 @@ class NewRace extends Component {
       temperature: '',
       precipitation: '',
       course: '',
-      racers: '',
+      racers: 6,
       position: '',
     }
   }
