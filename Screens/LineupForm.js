@@ -13,14 +13,6 @@ import {
 import { Dropdown } from 'react-native-material-dropdown'
 
 const { width, height } = Dimensions.get('window')
-const colors = [
-  { value: 'Red',    },
-  { value: 'Blue',   },
-  { value: 'Yellow', },
-  { value: 'Orange', },
-  { value: 'Green',  },
-  { value: 'Purple', },
-]
 
 class LineupForm extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -40,9 +32,23 @@ class LineupForm extends Component {
       course:        propState.course,
       racers:        propState.racers,
       position:      propState.position,
+      colors:        propState.colors,
       images: [],
     }
 
+    this.selectedColors = []
+  }
+
+  setImages = (data) => {
+    this.setState({
+      images:
+        [...this.state.images,
+          {
+            source: data.mediaUri
+          }
+        ]
+      })
+    console.log(this.state.images)
   }
 
   setStartLane(n, color) {
@@ -54,6 +60,7 @@ class LineupForm extends Component {
       holePos: '',
       finishPos: '',
     }
+    this.selectedColors = [...this.selectedColors, {value: color}]
     this.setState({racers: racers})
   }
   
@@ -70,35 +77,45 @@ class LineupForm extends Component {
     switch(userPosition) {
       case 'Hole':
         racers[this.findBibColor(color)].holePos = n + 1
-        break;
+        break
       case 'Split':
         racers[this.findBibColor(color)].splitPos = n + 1
-        break;
+        break
       case 'Finish':
         racers[this.findBibColor(color)].finishPos = n + 1
-        break;
+        break
     }
     this.setState({racers: racers})
     console.log(this.state)
   }
 
-  setImages = (data) => {
-    this.setState({
-      images:
-        [...this.state.images,
-          {
-            source: data.mediaUri
+  validateInput() {
+    racers = this.state.racers
+    switch (this.state.position) {
+      case 'Start Gate':
+        for(i = 0; i < racers.length; i++) {
+          if (racers[i] == null) {
+            Alert.alert('Error: select a color for lane ' + (i+1) + '.')
+            return false
           }
-        ]
-      })
-    console.log(this.state.images)
+        }
+        break
+      case 'Hole':
+        break
+      case 'Split':
+        break
+      case 'Finish':
+        break
+    }
   }
 
   nextScreenBtnPress(position) {
     const { navigate } = this.props.navigation
+    
     switch (this.state.position) {
       case 'Start Gate':
         this.state.position = 'Hole'
+        this.state.colors = this.selectedColors
         navigate('LineupForm', { title: this.state.position, props: this.state })
         break
       case 'Hole':
@@ -110,7 +127,7 @@ class LineupForm extends Component {
         navigate('LineupForm', { title: this.state.position, props: this.state })
         break
       case 'Finish':
-        console.log(this.state)
+        Alert.alert(this.state)
         break
     }
   }
@@ -149,7 +166,7 @@ class LineupForm extends Component {
               </Text>
               <Dropdown
                 label={'Color ' + (n+1)}
-                data={colors}
+                data={this.state.colors}
                 baseColor={'rgba(0, 0, 0, .5)'}
                 containerStyle={styles.input}
                 onChangeText={(color) => this.setStartLane(n, color)}
@@ -174,7 +191,7 @@ class LineupForm extends Component {
               </Text>
               <Dropdown
                 label={'Color ' + (n+1)}
-                data={colors}
+                data={this.state.colors}
                 baseColor={'rgba(0, 0, 0, .5)'}
                 containerStyle={styles.input}
                 onChangeText={(color) => this.updateRacerPos(this.state.position, color, n)}

@@ -18,17 +18,21 @@ class NewRace extends Component {
       temperature: 'TestTemp',
       precipitation: 'TestPrecip',
       course: 'TestCourse',
-      racers: this.initRacers(4),
+      racers: new Array(4),
       position: 'Start Gate',
+      colors: [
+        { value: 'Red',    },
+        { value: 'Blue',   },
+        { value: 'Yellow', },
+        { value: 'Orange', },
+        { value: 'Green',  },
+        { value: 'Purple', },
+      ]
     }
   }
 
   static navigationOptions = {
     title: 'New Race'
-  }
-
-  initRacers(n) {
-    return new Array(4)
   }
 
   _handleBtnPress() {
