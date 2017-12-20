@@ -6,8 +6,10 @@ import {
   Picker,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native'
+import { Dropdown } from 'react-native-material-dropdown'
 
 const { width, height } = Dimensions.get('window')
 
@@ -70,6 +72,71 @@ class LineupForm extends Component {
     }
   }
 
+  renderNRows(n) {
+    if (this.state.position === 'Start Gate') {
+      return (
+        [...Array(n).keys()].map((n) => {
+          return (
+            <View style={styles.row}>
+              <Text style={styles.text}>
+                Lane {n+1}:
+              </Text>
+              <Dropdown
+                label={'Color ' + (n+1)}
+                data={[{value: 'Blue',},]}
+                baseColor={'rgba(0, 0, 0, .5)'}
+                containerStyle={styles.input}
+              />
+            </View>
+          )
+        })
+      )
+    } else if (this.state.position === 'Split') {
+      return (
+        [...Array(n).keys()].map((n) => {
+          return (
+            <View style={styles.row}>
+              <Text style={styles.text}>
+                Lane {n+1}:
+              </Text>
+              <Dropdown
+                label={'First (etc)'}
+                data={[{value: 'Blue',},]}
+                baseColor={'rgba(0, 0, 0, .5)'}
+                containerStyle={styles.input}
+              />
+              <Dropdown
+                label={'Color ' + (n+1)}
+                data={[{value: 'Blue',},]}
+                baseColor={'rgba(0, 0, 0, .5)'}
+                containerStyle={styles.input}
+              />
+            </View>
+          )
+        })
+      )
+    } else if (this.state.position === 'Hole' ||
+               this.state.position === 'Finish') {
+      return (
+        [...Array(n).keys()].map((n) => {
+          return (
+            <View style={styles.row}>
+              <Text style={styles.text}>
+                Position {n+1}:
+              </Text>
+              <Dropdown
+                label={'Color ' + (n+1)}
+                data={[{value: 'Blue',},]}
+                baseColor={'rgba(0, 0, 0, .5)'}
+                containerStyle={styles.input}
+              />
+            </View>
+          )
+        })
+      )
+    }
+  }
+
   render() {
     const { navigate } = this.props.navigation
     return (
@@ -78,62 +145,17 @@ class LineupForm extends Component {
           {this.renderImages()}
         </View>
         <Button
-          onPress={() =>
-            navigate('ImageCapture', { setImages: this.setImages })
-          }
-          style={styles.button}
           title='Camera'
+          onPress={() => console.log(this.state)}
+          style={styles.button}
         />
-        <View style={styles.row}>
-          <Text style={styles.text}>
-            Lane 1:
-          </Text>
-          <Picker style={styles.input}
-          />
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.text}>
-            Lane 2:
-          </Text>
-          <Picker style={styles.input}
-          />
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.text}>
-            Lane 3:
-          </Text>
-          <Picker style={styles.input}
-          />
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.text}>
-            Lane 4:
-          </Text>
-          <Picker style={styles.input}
-          />
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.text}>
-            Lane 5:
-          </Text>
-          <Picker style={styles.input}
-          />
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.text}>
-            Lane 6:
-          </Text>
-          <Picker style={styles.input}
-          />
+        <View style={styles.rowView}>
+          {this.renderNRows(this.state.racers)}
         </View>
         <Button
-          onPress={() => {
-              console.log(this.state)
-              this.state.images = []
-            }
-          }
-          style={styles.button}
           title='Submit'
+          onPress={() => console.log(this.state)}
+          style={styles.button}
         />
       </View>
     )
@@ -161,25 +183,32 @@ const styles = StyleSheet.create({
   },
   imageText: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
   },
   imageView: {
-    flex: 5,
+    flex: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rowView: {
+    flex: 2,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
   text: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'left',
-    padding: 30,
+    padding: 5,
+    paddingLeft: 20,
   },
   input: {
     flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   button: {
     flex: 1,
