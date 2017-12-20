@@ -18,13 +18,17 @@ class NewRace extends Component {
       temperature: 'TestTemp',
       precipitation: 'TestPrecip',
       course: 'TestCourse',
-      racers: 6,
-      position: 'TestPos',
+      racers: this.initRacers(4),
+      position: 'Start Gate',
     }
   }
 
   static navigationOptions = {
     title: 'New Race'
+  }
+
+  initRacers(n) {
+    return new Array(4)
   }
 
   _handleBtnPress() {
@@ -54,6 +58,7 @@ class NewRace extends Component {
       { value: 'Hole',       },
       { value: 'Finish',     },
     ]
+
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -71,7 +76,7 @@ class NewRace extends Component {
             data={numRacers}
             baseColor={'rgba(0, 0, 0, .5)'}
             containerStyle={styles.input}
-            onChangeText={(text) => this.setState({racers: text})}
+            onChangeText={(text) => this.setState({racers: new Array(parseInt(text))})}
           />
         </View>
         <View style={styles.row}>
