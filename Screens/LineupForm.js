@@ -25,18 +25,17 @@ class LineupForm extends Component {
     propState = props.navigation.state.params.props
     
     this.state = {
-      codex:         propState.codex,
-      gender:        propState.gender,
-      temperature:   propState.temperature,
+              codex: propState.codex,
+              phase: propState.phase,
+             gender: propState.gender,
+        temperature: propState.temperature,
       precipitation: propState.precipitation,
-      course:        propState.course,
-      racers:        propState.racers,
-      position:      propState.position,
-      colors:        propState.colors,
-      images: [],
+             course: propState.course,
+             racers: propState.racers,
+           position: propState.position,
+             colors: propState.colors,
+             images: [],
     }
-
-    this.selectedColors = []
   }
 
   setImages = (data) => {
@@ -53,14 +52,8 @@ class LineupForm extends Component {
 
   setStartLane(n, color) {
     racers = this.state.racers
-    racers[n] = {
-      bibColor: color,
-      startLane: n+1,
-      splitPos: '',
-      holePos: '',
-      finishPos: '',
-    }
-    this.selectedColors = [...this.selectedColors, {value: color}]
+    racers[n].bibColor  = color
+    racers[n].startLane = n + 1
     this.setState({racers: racers})
   }
   
@@ -109,25 +102,64 @@ class LineupForm extends Component {
     }
   }
 
+  composeUrl() {
+    // baseurl = 'http://localhost:3978'
+    baseurl = 'https://sportstrackinglogger.azurewebsites.net/'
+
+    state = this.state
+    url = baseurl + '?'
+    url += 'raceCodex=' + state.codex
+    url +=  '&phaseID=' + state.phase.replace(/\s/g,'')
+    url +=    '&sport=' + 'null'
+    url +=    '&event=' + 'null'
+    url +=  '&indexed=' + 'null'
+    url +=     '&temp=' + state.temperature
+    url +=   '&precip=' + state.precipitation
+    url +=   '&gender=' + state.gender
+
+    racers = this.state.racers
+    for (var r in racers) {
+      bc = racers[r].bibColor
+      url += '&bib' + bc +      'StartLane=' + racers[r].startLane
+      url += '&bib' + bc +   'HolePosition=' + racers[r].holePos
+      url += '&bib' + bc +  'SplitPosition=' + racers[r].splitPos
+      url += '&bib' + bc + 'FinishPosition=' + racers[r].finishPos
+    }
+
+    console.log(url)
+    
+    return fetch(url)
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((error) => {
+        Alert.alert(error.message)
+      })
+  }
+
   nextScreenBtnPress(position) {
     const { navigate } = this.props.navigation
     
     switch (this.state.position) {
       case 'Start Gate':
-        this.state.position = 'Hole'
-        this.state.colors = this.selectedColors
-        navigate('LineupForm', { title: this.state.position, props: this.state })
+        state = this.state
+        state.position = 'Hole'
+        navigate('LineupForm', { title: state.position, props: state })
         break
       case 'Hole':
-        this.state.position = 'Split'
-        navigate('LineupForm', { title: this.state.position, props: this.state })
+        state = this.state
+        state.position = 'Split'
+        navigate('LineupForm', { title: state.position, props: state })
         break
       case 'Split':
-        this.state.position = 'Finish'
-        navigate('LineupForm', { title: this.state.position, props: this.state })
+        state = this.state
+        state.position = 'Finish'
+        navigate('LineupForm', { title: state.position, props: state })
         break
       case 'Finish':
-        Alert.alert(this.state)
+        console.log(this.state)
+        this.composeUrl()
+        Alert.alert('Done')
         break
     }
   }
@@ -155,21 +187,21 @@ class LineupForm extends Component {
   renderForm(n) {
     if (this.state.position === 'Start Gate') {
       return (
-        [...Array(n).keys()].map((n) => {
+        this.state.racers.map((r, i) => {
           return (
             <View
-              key={n+1}
+              key={i}
               style={styles.row}
             >
               <Text style={styles.text}>
-                Lane {n+1}:
+                Lane {i+1}:
               </Text>
               <Dropdown
-                label={'Color ' + (n+1)}
+                label={'Color ' + (i+1)}
                 data={this.state.colors}
                 baseColor={'rgba(0, 0, 0, .5)'}
                 containerStyle={styles.input}
-                onChangeText={(color) => this.setStartLane(n, color)}
+                onChangeText={(color) => this.setStartLane(i, color)}
               />
             </View>
           )
@@ -180,21 +212,21 @@ class LineupForm extends Component {
              this.state.position === 'Split' ||
              this.state.position === 'Finish') {
       return (
-        [...Array(n).keys()].map((n) => {
+        this.state.racers.map((r, i) => {
           return (
             <View
-              key={n+1}
+              key={i+1}
               style={styles.row}
             >
               <Text style={styles.text}>
-                Position {n+1}:
+                Position {i+1}:
               </Text>
               <Dropdown
-                label={'Color ' + (n+1)}
+                label={'Color ' + (i+1)}
                 data={this.state.colors}
                 baseColor={'rgba(0, 0, 0, .5)'}
                 containerStyle={styles.input}
-                onChangeText={(color) => this.updateRacerPos(this.state.position, color, n)}
+                onChangeText={(color) => this.updateRacerPos(this.state.position, color, i)}
               />
             </View>
           )
