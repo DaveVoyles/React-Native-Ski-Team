@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  Alert,
   Button,
   Dimensions,
   Image,
@@ -22,21 +23,18 @@ class LineupForm extends Component {
     super(props)
 
     propState = props.navigation.state.params.props
+    
     this.state = {
-      codex:         propState.codex,
-      gender:        propState.gender,
-      temperature:   propState.temperature,
+              codex: propState.codex,
+              phase: propState.phase,
+             gender: propState.gender,
+        temperature: propState.temperature,
       precipitation: propState.precipitation,
-      course:        propState.course,
-      racers:        propState.racers,
-      position:      propState.position,
-      images: [],
-      lane1: '',
-      lane2: '',
-      lane3: '',
-      lane4: '',
-      lane5: '',
-      lane6: '',
+             course: propState.course,
+             racers: propState.racers,
+           position: propState.position,
+             colors: propState.colors,
+             images: [],
     }
   }
 
@@ -50,6 +48,120 @@ class LineupForm extends Component {
         ]
       })
     console.log(this.state.images)
+  }
+
+  setStartLane(n, color) {
+    racers = this.state.racers
+    racers[n].bibColor  = color
+    racers[n].startLane = n + 1
+    this.setState({racers: racers})
+  }
+  
+  findBibColor(color) {
+    racers = this.state.racers
+    for (racer in racers) {
+      if (racers[racer].bibColor === color) 
+        return racer
+    }
+  }
+  
+  updateRacerPos(userPosition, color, n) {
+    racers = this.state.racers
+    switch(userPosition) {
+      case 'Hole':
+        racers[this.findBibColor(color)].holePos = n + 1
+        break
+      case 'Split':
+        racers[this.findBibColor(color)].splitPos = n + 1
+        break
+      case 'Finish':
+        racers[this.findBibColor(color)].finishPos = n + 1
+        break
+    }
+    this.setState({racers: racers})
+    console.log(this.state)
+  }
+
+  validateInput() {
+    racers = this.state.racers
+    switch (this.state.position) {
+      case 'Start Gate':
+        for(i = 0; i < racers.length; i++) {
+          if (racers[i] == null) {
+            Alert.alert('Error: select a color for lane ' + (i+1) + '.')
+            return false
+          }
+        }
+        break
+      case 'Hole':
+        break
+      case 'Split':
+        break
+      case 'Finish':
+        break
+    }
+  }
+
+  composeUrl() {
+    // baseurl = 'http://localhost:3978'
+    baseurl = 'https://sportstrackinglogger.azurewebsites.net/'
+
+    state = this.state
+    url = baseurl + '?'
+    url += 'raceCodex=' + state.codex
+    url +=  '&phaseID=' + state.phase.replace(/\s/g,'')
+    url +=    '&sport=' + 'null'
+    url +=    '&event=' + 'null'
+    url +=  '&indexed=' + 'null'
+    url +=     '&temp=' + state.temperature
+    url +=   '&precip=' + state.precipitation
+    url +=   '&gender=' + state.gender
+
+    racers = this.state.racers
+    for (var r in racers) {
+      bc = racers[r].bibColor
+      url += '&bib' + bc +      'StartLane=' + racers[r].startLane
+      url += '&bib' + bc +   'HolePosition=' + racers[r].holePos
+      url += '&bib' + bc +  'SplitPosition=' + racers[r].splitPos
+      url += '&bib' + bc + 'FinishPosition=' + racers[r].finishPos
+    }
+
+    console.log(url)
+    
+    return fetch(url)
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((error) => {
+        Alert.alert(error.message)
+      })
+  }
+
+  nextScreenBtnPress(position) {
+    const { navigate } = this.props.navigation
+    
+    switch (this.state.position) {
+      case 'Start Gate':
+        state = this.state
+        state.position = 'Hole'
+        navigate('LineupForm', { title: state.position, props: state })
+        break
+      case 'Hole':
+        state = this.state
+        state.position = 'Split'
+        navigate('LineupForm', { title: state.position, props: state })
+        break
+      case 'Split':
+        state = this.state
+        state.position = 'Finish'
+        navigate('LineupForm', { title: state.position, props: state })
+        break
+      case 'Finish':
+        console.log(this.state)
+        this.composeUrl()
+        Alert.alert('Done')
+        break
+    }
   }
 
   renderImages() {
@@ -72,63 +184,49 @@ class LineupForm extends Component {
     }
   }
 
-  renderNRows(n) {
+  renderForm(n) {
     if (this.state.position === 'Start Gate') {
       return (
-        [...Array(n).keys()].map((n) => {
+        this.state.racers.map((r, i) => {
           return (
-            <View style={styles.row}>
+            <View
+              key={i}
+              style={styles.row}
+            >
               <Text style={styles.text}>
-                Lane {n+1}:
+                Lane {i+1}:
               </Text>
               <Dropdown
-                label={'Color ' + (n+1)}
-                data={[{value: 'Blue',},]}
+                label={'Color ' + (i+1)}
+                data={this.state.colors}
                 baseColor={'rgba(0, 0, 0, .5)'}
                 containerStyle={styles.input}
+                onChangeText={(color) => this.setStartLane(i, color)}
               />
             </View>
           )
         })
       )
-    } else if (this.state.position === 'Split') {
+    }
+    else if (this.state.position === 'Hole'  ||
+             this.state.position === 'Split' ||
+             this.state.position === 'Finish') {
       return (
-        [...Array(n).keys()].map((n) => {
+        this.state.racers.map((r, i) => {
           return (
-            <View style={styles.row}>
+            <View
+              key={i+1}
+              style={styles.row}
+            >
               <Text style={styles.text}>
-                Lane {n+1}:
+                Position {i+1}:
               </Text>
               <Dropdown
-                label={'First (etc)'}
-                data={[{value: 'Blue',},]}
+                label={'Color ' + (i+1)}
+                data={this.state.colors}
                 baseColor={'rgba(0, 0, 0, .5)'}
                 containerStyle={styles.input}
-              />
-              <Dropdown
-                label={'Color ' + (n+1)}
-                data={[{value: 'Blue',},]}
-                baseColor={'rgba(0, 0, 0, .5)'}
-                containerStyle={styles.input}
-              />
-            </View>
-          )
-        })
-      )
-    } else if (this.state.position === 'Hole' ||
-               this.state.position === 'Finish') {
-      return (
-        [...Array(n).keys()].map((n) => {
-          return (
-            <View style={styles.row}>
-              <Text style={styles.text}>
-                Position {n+1}:
-              </Text>
-              <Dropdown
-                label={'Color ' + (n+1)}
-                data={[{value: 'Blue',},]}
-                baseColor={'rgba(0, 0, 0, .5)'}
-                containerStyle={styles.input}
+                onChangeText={(color) => this.updateRacerPos(this.state.position, color, i)}
               />
             </View>
           )
@@ -146,15 +244,15 @@ class LineupForm extends Component {
         </View>
         <Button
           title='Camera'
-          onPress={() => console.log(this.state)}
+          onPress={() => navigate('ImageCapture', { setImages: this.setImages })}
           style={styles.button}
         />
         <View style={styles.rowView}>
-          {this.renderNRows(this.state.racers)}
+          {this.renderForm(this.state.racers.length)}
         </View>
         <Button
-          title='Submit'
-          onPress={() => console.log(this.state)}
+          title='Next >'
+          onPress={() => this.nextScreenBtnPress()}
           style={styles.button}
         />
       </View>

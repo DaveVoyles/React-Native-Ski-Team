@@ -5,10 +5,10 @@ import NewRace              from '../Screens/NewRace'
 
 const AppNavigator = StackNavigator({
   NewRace: {
-    screen: NewRace
+    screen: NewRace,
   },
   LineupForm: {
-    screen: LineupForm
+    screen: LineupForm,
   },
   ImageCapture: {
     screen: ImageCapture,
