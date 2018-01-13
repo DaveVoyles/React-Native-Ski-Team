@@ -54,7 +54,7 @@ class NewRace extends Component {
 
     for (i in racers) {
       racers[i] = {
-         bibColor: this.state.colors[i].value,
+         bibColor: this.colors[i].value,
         startLane: -1,
           holePos: -1,
          splitPos: -1,
