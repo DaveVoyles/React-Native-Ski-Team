@@ -38,11 +38,6 @@ class ImageCapture extends Component {
             >
             <Image source={require('../assets/ic_photo_camera_36pt.png')} />
           </TouchableOpacity>
-          {/* <Text style={styles.capture} onPress={
-            this.takePicture.bind(this)}
-            >
-            Capture
-          </Text> */}
         </Camera>
       </View>
     )

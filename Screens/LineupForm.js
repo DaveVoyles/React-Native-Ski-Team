@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native'
 import { Dropdown } from 'react-native-material-dropdown'
+import Gallery      from 'react-native-image-gallery'
 
 const { width, height } = Dimensions.get('window')
 
@@ -35,6 +36,7 @@ class LineupForm extends Component {
            position: propState.position,
              colors: propState.colors,
              images: [],
+           imgIndex: 0
     }
   }
 
@@ -131,6 +133,7 @@ class LineupForm extends Component {
     return fetch(url)
       .then((response) => {
         console.log(response)
+        Alert.alert('Done')
       })
       .catch((error) => {
         Alert.alert(error.message)
@@ -159,7 +162,6 @@ class LineupForm extends Component {
       case 'Finish':
         console.log(this.state)
         this.composeUrl()
-        Alert.alert('Done')
         break
     }
   }
@@ -177,8 +179,19 @@ class LineupForm extends Component {
         <View style={styles.imageGallery}>
           <Image
             style={styles.image}
-            source={{uri: this.state.images[0].source}}
-          />
+            source={{uri: this.state.images[Math.abs(this.state.imgIndex)%this.state.images.length].source}}
+          >
+            <View style={styles.imageNavRow}>
+              <Button
+                title={'<'}
+                onPress={() => this.setState({imgIndex: this.state.imgIndex - 1})}
+              />
+              <Button
+                title={'>'}
+                onPress={() => this.setState({imgIndex: this.state.imgIndex + 1})}
+              />
+            </View>
+          </Image>
         </View>
       )
     }
@@ -273,7 +286,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width,
-    height: height / 3,
+    height: height / 2.25,
   },
   imageGallery: {
     flex: 1,
@@ -284,6 +297,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  imageNavRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   imageView: {
     flex: 1,
     flexDirection: 'row',
@@ -291,7 +310,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rowView: {
-    flex: 2,
+    flex: 1.25,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
