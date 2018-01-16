@@ -11,7 +11,6 @@ import {
   View,
 } from 'react-native'
 import { Dropdown } from 'react-native-material-dropdown'
-import Gallery      from 'react-native-image-gallery'
 
 const { width, height } = Dimensions.get('window')
 
@@ -129,7 +128,7 @@ class LineupForm extends Component {
     }
 
     console.log(url)
-    
+    Alert.alert('Submitting data...')
     return fetch(url)
       .then((response) => {
         console.log(response)
