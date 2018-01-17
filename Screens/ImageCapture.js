@@ -31,6 +31,7 @@ class ImageCapture extends Component {
             this.camera = cam
           }}
           style={styles.preview}
+          captureTarget={Camera.constants.CaptureTarget.disk}
           aspect={Camera.constants.Aspect.fill}>
           <TouchableOpacity
             style={styles.capture}

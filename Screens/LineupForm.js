@@ -4,6 +4,7 @@ import {
   Button,
   Dimensions,
   Image,
+  ImageBackground,
   Picker,
   StyleSheet,
   Text,
@@ -44,7 +45,7 @@ class LineupForm extends Component {
       images:
         [...this.state.images,
           {
-            source: data.mediaUri
+            source: data.path
           }
         ]
       })
@@ -176,7 +177,7 @@ class LineupForm extends Component {
     else {
       return (
         <View style={styles.imageGallery}>
-          <Image
+          <ImageBackground
             style={styles.image}
             source={{uri: this.state.images[Math.abs(this.state.imgIndex)%this.state.images.length].source}}
           >
@@ -190,7 +191,7 @@ class LineupForm extends Component {
                 onPress={() => this.setState({imgIndex: this.state.imgIndex + 1})}
               />
             </View>
-          </Image>
+          </ImageBackground>
         </View>
       )
     }
