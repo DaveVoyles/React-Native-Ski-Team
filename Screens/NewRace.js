@@ -13,13 +13,15 @@ class NewRace extends Component {
   constructor(props) {
     super(props)
     
+    var d = new Date();
+
     this.state = {
-      codex: 'TestCodex',
+      codex: 'R' + d.getHours() + d.getDay() + d.getMonth() + d.getFullYear(),
       phase: 'Heat 1',
       gender: 'TestGender',
       temperature: 'TestTemp',
       precipitation: 'TestPrecip',
-      course: 'TestCourse',
+      course: 'DEBUG-CLIENTDEFAULT',
       racers: Array.apply(null, Array(4)),
       position: 'Start Gate',
       colors: [
@@ -32,16 +34,16 @@ class NewRace extends Component {
 
     this.colors = [
       { value: 'Red',    },
-      { value: 'Green',   },
-      { value: 'Blue', },
+      { value: 'Green',  },
+      { value: 'Blue',   },
       { value: 'Yellow', },
       { value: 'Black',  },
-      { value: 'White', },
+      { value: 'White',  },
     ]
   }
 
   static navigationOptions = {
-    title: 'New Race'
+    title: 'SBX App v0.3.3' // Release #
   }
 
   componentDidMount() {

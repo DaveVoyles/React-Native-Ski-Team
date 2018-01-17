@@ -105,7 +105,6 @@ class LineupForm extends Component {
   }
 
   composeUrl() {
-    // baseurl = 'http://localhost:3978'
     baseurl = 'https://sportstrackinglogger.azurewebsites.net/'
 
     state = this.state
