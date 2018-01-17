@@ -41,7 +41,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow camera access</string>
+	<string>Allow Camera Access</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Allow Gallery Access</string>
 	<key>NSAppTransportSecurity</key>
 	<!--See http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/ -->
 	<dict>
