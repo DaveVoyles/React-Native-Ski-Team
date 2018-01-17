@@ -13,13 +13,15 @@ class NewRace extends Component {
   constructor(props) {
     super(props)
     
+    var d = new Date();
+
     this.state = {
-      codex: 'TestCodex',
+      codex: 'R' + d.getHours() + d.getDay() + d.getMonth() + d.getFullYear(),
       phase: 'Heat 1',
       gender: 'TestGender',
       temperature: 'TestTemp',
       precipitation: 'TestPrecip',
-      course: 'TestCourse',
+      course: 'DEBUG-CLIENTDEFAULT',
       racers: Array.apply(null, Array(4)),
       position: 'Start Gate',
       colors: [
