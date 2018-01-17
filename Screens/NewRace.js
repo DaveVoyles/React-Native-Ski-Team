@@ -32,16 +32,16 @@ class NewRace extends Component {
 
     this.colors = [
       { value: 'Red',    },
-      { value: 'Green',   },
-      { value: 'Blue', },
+      { value: 'Green',  },
+      { value: 'Blue',   },
       { value: 'Yellow', },
       { value: 'Black',  },
-      { value: 'White', },
+      { value: 'White',  },
     ]
   }
 
   static navigationOptions = {
-    title: 'New Race'
+    title: 'SBX App v0.3.3' // Release #
   }
 
   componentDidMount() {
