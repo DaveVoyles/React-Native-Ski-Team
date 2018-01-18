@@ -43,7 +43,7 @@ class NewRace extends Component {
   }
 
   static navigationOptions = {
-    title: 'SBX App v0.3.3' // Release #
+    title: 'SBX App v0.3.4' // Release #
   }
 
   componentDidMount() {
