@@ -5,13 +5,12 @@ import {
   Dimensions,
   Image,
   ImageBackground,
-  Picker,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native'
-import { Dropdown } from 'react-native-material-dropdown'
+import { Picker } from 'react-native-picker-dropdown'
 
 const { width, height } = Dimensions.get('window')
 
@@ -49,59 +48,93 @@ class LineupForm extends Component {
           }
         ]
       })
-    console.log(this.state.images)
-  }
-
-  setStartLane(n, color) {
-    racers = this.state.racers
-    racers[n].bibColor  = color
-    racers[n].startLane = n + 1
-    this.setState({racers: racers})
   }
   
-  findBibColor(color) {
+  findBibColorIndex(color) {
     racers = this.state.racers
-    for (racer in racers) {
-      if (racers[racer].bibColor === color) 
-        return racer
+    for (r in racers) {
+      if (racers[r].bibColor === color) 
+        return r
+    }
+  }
+
+  getStartLaneBibColor(i) {
+    racers = this.state.racers
+    for (r in racers) {
+      if (racers[r].startLane == i + 1)
+        return racers[r].bibColor
+    }
+  }
+
+  getHolePosBibColor(i) {
+    racers = this.state.racers
+    for (r in racers) {
+      if (racers[r].holePos == i + 1)
+        return racers[r].bibColor
+    }
+  }
+
+  getSplitPosBibColor(i) {
+    racers = this.state.racers
+    for (r in racers) {
+      if (racers[r].splitPos == i + 1)
+        return racers[r].bibColor
+    }
+  }
+
+  getFinishPosBibColor(i) {
+    racers = this.state.racers
+    for (r in racers) {
+      if (racers[r].finishPos == i + 1)
+        return racers[r].bibColor
     }
   }
   
-  updateRacerPos(userPosition, color, n) {
+  setStartLane(i, color) {
+    racers = this.state.racers
+    for (r in racers) {
+      if (racers[r].startLane != -1 && racers[r].bibColor === color) {
+        Alert.alert("This color has already been selected.")
+        return
+      }
+    }
+    racers[i].bibColor  = color
+    racers[i].startLane = i + 1
+    this.setState({racers: racers})
+  }
+
+  updateRacerPos(i, color, userPosition) {
     racers = this.state.racers
     switch(userPosition) {
       case 'Hole':
-        racers[this.findBibColor(color)].holePos = n + 1
+        for (r in racers) {
+          if (racers[r].holePos != -1 && racers[r].bibColor === color) {
+            Alert.alert("This color has already been selected.")
+            return
+          }
+        }
+        racers[this.findBibColorIndex(color)].holePos = i + 1
         break
       case 'Split':
-        racers[this.findBibColor(color)].splitPos = n + 1
+        for (r in racers) {
+          if (racers[r].splitPos != -1 && racers[r].bibColor === color) {
+            Alert.alert("This color has already been selected.")
+            return
+          }
+        }
+        racers[this.findBibColorIndex(color)].splitPos = i + 1
         break
       case 'Finish':
-        racers[this.findBibColor(color)].finishPos = n + 1
+        for (r in racers) {
+          if (racers[r].finishPos != -1 && racers[r].bibColor === color) {
+            Alert.alert("This color has already been selected.")
+            return
+          }
+        }
+        racers[this.findBibColorIndex(color)].finishPos = i + 1
         break
     }
     this.setState({racers: racers})
-    console.log(this.state)
-  }
-
-  validateInput() {
-    racers = this.state.racers
-    switch (this.state.position) {
-      case 'Start Gate':
-        for(i = 0; i < racers.length; i++) {
-          if (racers[i] == null) {
-            Alert.alert('Error: select a color for lane ' + (i+1) + '.')
-            return false
-          }
-        }
-        break
-      case 'Hole':
-        break
-      case 'Split':
-        break
-      case 'Finish':
-        break
-    }
   }
 
   composeUrl() {
@@ -197,53 +230,139 @@ class LineupForm extends Component {
   }
 
   renderForm(n) {
-    if (this.state.position === 'Start Gate') {
-      return (
-        this.state.racers.map((r, i) => {
-          return (
-            <View
-              key={i}
-              style={styles.row}
-            >
-              <Text style={styles.text}>
-                Lane {i+1}:
-              </Text>
-              <Dropdown
-                label={'Color ' + (i+1)}
-                data={this.state.colors}
-                baseColor={'rgba(0, 0, 0, .5)'}
-                containerStyle={styles.input}
-                onChangeText={(color) => this.setStartLane(i, color)}
-              />
-            </View>
-          )
-        })
-      )
-    }
-    else if (this.state.position === 'Hole'  ||
-             this.state.position === 'Split' ||
-             this.state.position === 'Finish') {
-      return (
-        this.state.racers.map((r, i) => {
-          return (
-            <View
-              key={i+1}
-              style={styles.row}
-            >
-              <Text style={styles.text}>
-                Position {i+1}:
-              </Text>
-              <Dropdown
-                label={'Color ' + (i+1)}
-                data={this.state.colors}
-                baseColor={'rgba(0, 0, 0, .5)'}
-                containerStyle={styles.input}
-                onChangeText={(color) => this.updateRacerPos(this.state.position, color, i)}
-              />
-            </View>
-          )
-        })
-      )
+    switch (this.state.position) {
+      case 'Start Gate':
+        return (
+          this.state.racers.map((r,i)=>{
+            return (
+              <View
+                key={i}
+                style={styles.row}
+              >
+                <Text style={styles.text}>
+                  Lane {i+1}:
+                </Text>
+                <View style={styles.pickerView}>
+                  <Picker
+                    selectedValue={this.getStartLaneBibColor(i)}
+                    onValueChange={(v,j)=>this.setStartLane(i,v)}
+                    mode="dialog"
+                    textStyle={styles.pickerText}
+                  >
+                  {
+                    this.state.colors.map((c,k)=>{
+                      color = this.state.colors[k]
+                      return (
+                        <Picker.Item key={k} label={color} value={color} />
+                      )
+                    })
+                  }
+                  </Picker>
+                </View>
+              </View>
+            )
+          })
+        )
+        break
+      case 'Hole':
+        return (
+          this.state.racers.map((r, i) => {
+            return (
+              <View
+                key={i+1}
+                style={styles.row}
+              >
+                <Text style={styles.text}>
+                  Position {i+1}:
+                </Text>
+                <View style={styles.pickerView}>
+                  <Picker
+                    selectedValue={this.getHolePosBibColor(i)}
+                    onValueChange={(v,j)=>this.updateRacerPos(i, v, this.state.position)}
+                    mode="dialog"
+                    textStyle={styles.pickerText}
+                  >
+                  {
+                    this.state.colors.map((c,k)=>{
+                      color = this.state.colors[k]
+                      return (
+                        <Picker.Item key={k} label={color} value={color} />
+                      )
+                    })
+                  }
+                  </Picker>
+                </View>
+              </View>
+            )
+          })
+        )
+        break
+      case 'Split':
+        return (
+          this.state.racers.map((r, i) => {
+            return (
+              <View
+                key={i+1}
+                style={styles.row}
+              >
+                <Text style={styles.text}>
+                  Position {i+1}:
+                </Text>
+                <View style={styles.pickerView}>
+                  <Picker
+                    selectedValue={this.getSplitPosBibColor(i)}
+                    onValueChange={(v,j)=>this.updateRacerPos(i, v, this.state.position)}
+                    mode="dialog"
+                    textStyle={styles.pickerText}
+                  >
+                  {
+                    this.state.colors.map((c,k)=>{
+                      color = this.state.colors[k]
+                      return (
+                        <Picker.Item key={k} label={color} value={color} />
+                      )
+                    })
+                  }
+                  </Picker>
+                </View>
+              </View>
+            )
+          })
+        )
+        break
+      case 'Finish':
+        return (
+          this.state.racers.map((r, i) => {
+            return (
+              <View
+                key={i+1}
+                style={styles.row}
+              >
+                <Text style={styles.text}>
+                  Position {i+1}:
+                </Text>
+                <View style={styles.pickerView}>
+                  <Picker
+                    selectedValue={this.getFinishPosBibColor(i)}
+                    onValueChange={(v,j)=>this.updateRacerPos(i, v, this.state.position)}
+                    mode="dialog"
+                    textStyle={styles.pickerText}
+                  >
+                  {
+                    this.state.colors.map((c,k)=>{
+                      color = this.state.colors[k]
+                      return (
+                        <Picker.Item key={k} label={color} value={color} />
+                      )
+                    })
+                  }
+                  </Picker>
+                </View>
+              </View>
+            )
+          })
+        )
+        break
     }
   }
 
@@ -313,6 +432,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  pickerView: {
+    flex: 2,
+  },
+  pickerText: {
+    color: 'black',
+    padding: 10,
+    fontSize: 16,
+    textAlign: 'right',
   },
   text: {
     flex: 1,
