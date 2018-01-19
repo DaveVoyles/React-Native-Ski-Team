@@ -347,7 +347,7 @@ class LineupForm extends Component {
             <View style={styles.pickerView}>
               <Picker
                 selectedValue={this.getHolePosBibColor(i)}
-                onValueChange={(v,j)=>this.setRacerPos(i, v, this.state.position)}
+                onValueChange={(v,j)=>this.setHolePos(i, v, this.state.position)}
                 mode="dialog"
                 textStyle={styles.pickerText}
               >
@@ -381,7 +381,7 @@ class LineupForm extends Component {
             <View style={styles.pickerView}>
               <Picker
                 selectedValue={this.getSplitPosBibColor(i)}
-                onValueChange={(v,j)=>this.setRacerPos(i, v, this.state.position)}
+                onValueChange={(v,j)=>this.setSplitPos(i, v, this.state.position)}
                 mode="dialog"
                 textStyle={styles.pickerText}
               >
@@ -415,7 +415,7 @@ class LineupForm extends Component {
             <View style={styles.pickerView}>
               <Picker
                 selectedValue={this.getFinishPosBibColor(i)}
-                onValueChange={(v,j)=>this.setRacerPos(i, v, this.state.position)}
+                onValueChange={(v,j)=>this.setFinishPos(i, v, this.state.position)}
                 mode="dialog"
                 textStyle={styles.pickerText}
               >
