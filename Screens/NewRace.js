@@ -168,7 +168,6 @@ class NewRace extends Component {
           <TextInput
             style={styles.textInput}
             value={this.state.temperature}
-            keyboardType='numeric'
             onChangeText={(text)=>this.setState({temperature: text})}
           />
         </View>
