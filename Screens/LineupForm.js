@@ -544,8 +544,6 @@ const styles = StyleSheet.create({
   pickerText: {
     color: 'black',
     padding: 10,
-    fontSize: 16,
-    textAlign: 'right',
   },
   text: {
     flex: 1,
