@@ -26,6 +26,7 @@ class NewRace extends Component {
       racercount: '4',
       position: 'Start Gate',
       colors: [
+        'No Racer',
         'Red',
         'Green',
         'Blue',
@@ -34,6 +35,7 @@ class NewRace extends Component {
     }
 
     this.colors = [
+      'No Racer',
       'Red',
       'Green',
       'Blue',
@@ -67,7 +69,7 @@ class NewRace extends Component {
 
     this.setState({racers: racers})
     this.setState({racercount: text})
-    this.setState({colors: this.colors.slice(0, count)})
+    this.setState({colors: this.colors.slice(0, count+1)})
   }
 
   onButtonPress() {
@@ -215,8 +217,6 @@ const styles = StyleSheet.create({
   pickerText: {
     color: 'black',
     padding: 10,
-    fontSize: 16,
-    textAlign: 'right',
   },
   textInput: {
     flex: 2,
